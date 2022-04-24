@@ -1,0 +1,9 @@
+
+fastapi
+requests
+uvicorn[standard]
+pytz
+types-python-dateutil
+python-dateutil
+pydantic
+feedparser
