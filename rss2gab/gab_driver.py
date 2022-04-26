@@ -23,7 +23,6 @@ def gab_post(username: str, password: str, content: str, dry_run=False) -> None:
         driver.delete_all_cookies()
         driver.set_window_size(WIDTH, HEIGHT)
         driver.get("https://gab.com/auth/sign_in")
-
         el_email = driver.find_element_by_id("user_email")
         el_email.click()
         el_email.send_keys(username)
