@@ -13,7 +13,7 @@ class GabDriverTest(unittest.TestCase):
     """Gab driver test framework."""
 
     def test_dryrun_posting(self) -> None:
-        """Tests that gab_post works"""
+        """Tests that gab_post works, but doesn't not post."""
         gab_driver.gab_post(USER, PASS, "test", dry_run=True)
 
     @unittest.skip("Live testing disabled")
