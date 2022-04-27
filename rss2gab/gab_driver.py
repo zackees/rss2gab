@@ -2,10 +2,13 @@
     Module for interacting with the Gab.com website.
 """
 
+import os
 import ssl
+import tempfile
 import time
 from typing import Optional
 
+import requests  # type: ignore
 from autoselenium import Driver  # type: ignore
 from selenium.webdriver.common.action_chains import ActionChains  # type: ignore
 from selenium.webdriver.common.keys import Keys  # type: ignore
@@ -21,6 +24,17 @@ WIDTH = 1200
 HEIGHT = 800
 
 TIMEOUT_IMAGE_UPLOAD = 60  # Wait upto 60 seconds to upload the image.
+
+
+def _download_file(url: str, path: str) -> None:
+    """Downloads the file at the given url to the given path."""
+    with requests.get(url, stream=True) as resp:
+        resp.raise_for_status()
+        with open(path, "wb") as file_h:
+            for chunk in resp.iter_content(chunk_size=8192):
+                if chunk:  # filter out keep-alive new chunks
+                    file_h.write(chunk)
+                    file_h.flush()
 
 
 def _action_login(driver: Driver, username: str, password: str) -> None:
@@ -54,7 +68,17 @@ def _action_make_post(
     # Upload the image if it's been specified.
     if jpg_path is not None:
         # Copy the image to the clipboard and then paste it into the post.
-        clipboard_store_jpg(jpg_path)
+        if "http" in jpg_path:
+            # download the image url to a local temp file and then put it on the clipboard.
+            with tempfile.NamedTemporaryFile(delete=False) as temp:
+                try:
+                    temp.close()
+                    _download_file(jpg_path, temp.name)
+                    clipboard_store_jpg(temp.name)
+                finally:
+                    os.remove(temp.name)
+        else:
+            clipboard_store_jpg(jpg_path)
         # Send a paste command to the keyboard.
         actions = ActionChains(driver)
         actions.key_down(Keys.META)
