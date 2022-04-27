@@ -16,7 +16,7 @@ WIDTH = 1200
 HEIGHT = 800
 
 
-def gab_post(username: str, password: str, content: str, dry_run: bool=False) -> None:
+def gab_post(username: str, password: str, content: str, dry_run: bool = False) -> None:
     """Logs into Gab.com and posts the given content."""
     with Driver("firefox", root="drivers") as driver:
         driver.delete_all_cookies()
@@ -39,6 +39,14 @@ def gab_post(username: str, password: str, content: str, dry_run: bool=False) ->
         actions = ActionChains(driver)
         actions.send_keys(content)
         actions.perform()
-        if dry_run:
-            return
-        print("make post")
+        # Find an element that contains "Post"
+        el_post_btn = driver.find_element_by_xpath('//*[contains(text(), "Post")]')
+        # put the mouse over the button of el_post_btn and click it.
+        actions = ActionChains(driver)
+        actions.move_to_element(el_post_btn)
+        actions.click()
+        if not dry_run:
+            actions.perform()
+
+        # img_path = "screenshot.png"
+        # Load the image from the file and copy it into the system clipboard.
