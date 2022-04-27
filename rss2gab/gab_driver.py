@@ -2,43 +2,38 @@
     Module for interacting with the Gab.com website.
 """
 
+# pylint: disable=too-many-arguments
+
 import os
 import ssl
 import tempfile
 import time
 from typing import Optional
 
-import requests  # type: ignore
 from autoselenium import Driver  # type: ignore
+
+# black from .download import download_file
+from download import download  # type: ignore
+from pyjpgclipboard import clipboard_load_jpg  # type: ignore
 from selenium.webdriver.common.action_chains import ActionChains  # type: ignore
 from selenium.webdriver.common.keys import Keys  # type: ignore
-
-from .clipboard import clipboard_store_jpg
 
 ssl._create_default_https_context = (  # pylint: disable=protected-access
     ssl._create_unverified_context  # pylint: disable=protected-access
 )
 
-# Tested to work. For some reason the test fails if it's less resolution than this.
+# Width and height need to be this value in order for the gab sign in to
+# work.
 WIDTH = 1200
 HEIGHT = 800
 
 TIMEOUT_IMAGE_UPLOAD = 60  # Wait upto 60 seconds to upload the image.
 
 
-def _download_file(url: str, path: str) -> None:
-    """Downloads the file at the given url to the given path."""
-    with requests.get(url, stream=True) as resp:
-        resp.raise_for_status()
-        with open(path, "wb") as file_h:
-            for chunk in resp.iter_content(chunk_size=8192):
-                if chunk:  # filter out keep-alive new chunks
-                    file_h.write(chunk)
-                    file_h.flush()
-
-
 def _action_login(driver: Driver, username: str, password: str) -> None:
     """Logs into Gab.com and posts the given content."""
+    driver.delete_all_cookies()  # Delete any cookies, otherwise sign in breaks.
+    driver.set_window_size(WIDTH, HEIGHT)  # Yes this is needed tool, or it breaks.
     # Handle Page sign in, where the user and password are entered.
     driver.get("https://gab.com/auth/sign_in")
     el_email = driver.find_element_by_id("user_email")
@@ -73,12 +68,12 @@ def _action_make_post(
             with tempfile.NamedTemporaryFile(delete=False) as temp:
                 try:
                     temp.close()
-                    _download_file(jpg_path, temp.name)
-                    clipboard_store_jpg(temp.name)
+                    download(jpg_path, temp.name)
+                    clipboard_load_jpg(temp.name)
                 finally:
                     os.remove(temp.name)
         else:
-            clipboard_store_jpg(jpg_path)
+            clipboard_load_jpg(jpg_path)
         # Send a paste command to the keyboard.
         actions = ActionChains(driver)
         actions.key_down(Keys.META)
@@ -89,7 +84,9 @@ def _action_make_post(
             try:
                 # Wait for the image to upload.
                 # Find the element with the xpath that includes an image source
-                driver.find_element_by_xpath('//img[contains(@src, "media_attachments")]')
+                driver.find_element_by_xpath(
+                    '//img[contains(@src, "media_attachments")]'
+                )
                 break
             except Exception:  # pylint: disable=broad-except
                 if time.time() > timeout:
@@ -118,8 +115,8 @@ def gab_post(
     dry_run: bool = False,
 ) -> None:
     """Logs into Gab.com and posts the given content."""
+    # Note that we must use the firefox driver. For some reason the chrome driver
+    # skips the sign in page and causes an error to occure.
     with Driver("firefox", root="drivers") as driver:
-        driver.delete_all_cookies()
-        driver.set_window_size(WIDTH, HEIGHT)
         _action_login(driver, username, password)
         _action_make_post(driver, content, jpg_path=jpg_path, dry_run=dry_run)
