@@ -2,7 +2,7 @@
 Takes an RSS feed and auto posts to gab
 
 There is 100% test coverage on this codebase. So if the unit tests pass on your platform then
-the system will work correct.
+the system will work correctly.
 
 # Tests
 
