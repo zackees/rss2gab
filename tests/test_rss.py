@@ -23,7 +23,7 @@ class RssTester(unittest.TestCase):
     def test_dryrun_posting(self) -> None:
         """Tests that gab_post works, but doesn't not post."""
         content_list = parse_rss_feed(RSS_FEED)
-        for content, img in content_list:
+        for content, img in content_list[0:1]:
             if not POST_IMAGE:
                 img = None
             gab_post(USER, PASS, content=content, jpg_path=img, dry_run=True)

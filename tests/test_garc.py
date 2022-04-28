@@ -16,7 +16,7 @@ class GarcTester(unittest.TestCase):
     def test_fetch_bigleague(self) -> None:
         """Tests that gab_post works, but doesn't not post."""
         posts = gab_readposts(user=ACCOUNT)
-        pprint(posts)
+        self.assertTrue(len(posts) > 0)
 
 
 if __name__ == "__main__":

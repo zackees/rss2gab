@@ -10,9 +10,11 @@ import feedparser  # type: ignore
 
 _IMG_URL_PATTERN = r"https?://[^\s]+\.(?:png|jpg|jpeg|gif)"
 
+
 @dataclass
 class RssEntry:
     """Simple object of parsed RSS entries."""
+
     content: str = ""
     img: Optional[str] = None
 

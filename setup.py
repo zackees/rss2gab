@@ -26,9 +26,7 @@ with open(os.path.join(HERE, "README.md"), encoding="utf-8", mode="rt") as fd:
 with open(os.path.join(HERE, "requirements.txt"), encoding="utf-8", mode="rt") as fd:
     REQUIREMENTS = [line.strip() for line in fd.readlines() if line.strip()]
 
-with open(
-    os.path.join(HERE, NAME, "version.py"), encoding="utf-8", mode="rt"
-) as fd:
+with open(os.path.join(HERE, NAME, "version.py"), encoding="utf-8", mode="rt") as fd:
     for line in fd.readlines():
         if line.startswith("VERSION"):
             VERSION = line.split("=")[1].strip().strip('"')
@@ -95,9 +93,9 @@ setup(
     ],
     install_requires=REQUIREMENTS,
     entry_points={
-        #"console_scripts": [
-        #    "vid_db = vid_db.cmd:main",
-        #],
+        "console_scripts": [
+            "rss2gab = rss2gab.command:main",
+        ],
     },
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     package_data={},

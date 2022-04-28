@@ -1,3 +1,4 @@
 gabposter
 feedparser
 garc
+requests
