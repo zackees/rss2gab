@@ -1,4 +1,3 @@
 gabposter
 feedparser
-beautifulsoup4
 garc
