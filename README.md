@@ -11,5 +11,5 @@ Just simply run `tox` at the command line and everything should be tested. You m
 # Building an app
 
  ```
- python -m nuitka --follow-imports sites/bigleague.py
+ python -m nuitka --follow-imports  --standalone --onefile sites/bigleague.py
  ```
