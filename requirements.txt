@@ -1,5 +1,4 @@
-
-selenium
-auto-selenium
-pyjpgclipboard
-download
+gabposter
+feedparser
+beautifulsoup4
+garc

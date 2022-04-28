@@ -12,8 +12,8 @@ from setuptools import Command, find_packages, setup
 HERE = os.path.dirname(__file__)
 
 NAME = "rss2gab"
-DESCRIPTION = "Server to run ytclip."
-URL = "https://github.com/zackees/vid_db"
+DESCRIPTION = "Auto posts updates to the rss feed to gab"
+URL = "https://github.com/zackees/rss2gab"
 EMAIL = "dont@email.me"
 AUTHOR = "Zach Vorhies"
 REQUIRES_PYTHON = ">=3.6.0"
