@@ -7,3 +7,9 @@ the system will work correctly.
 # Tests
 
 Just simply run `tox` at the command line and everything should be tested. You may need to install `tox` with `python -m pip tox`.
+
+# Building an app
+
+ ```
+ python -m nuitka --follow-imports sites/bigleague.py
+ ```

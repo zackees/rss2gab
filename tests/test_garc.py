@@ -3,7 +3,6 @@
 """
 
 import unittest
-from pprint import pprint
 
 from rss2gab.gab_readposts import gab_readposts
 
