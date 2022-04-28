@@ -6,8 +6,10 @@ Command line handler for the rss2gab.
 
 import argparse
 import sys
+from getpass import getpass
 
 import requests  # type: ignore
+from gabposter import gab_post  # type: ignore
 
 from rss2gab import rss2gab_loop
 
@@ -73,9 +75,19 @@ def main() -> None:
         if "y" not in input(msg).lower():
             sys.exit(1)
         sys.exit(1)
+    # Get the password, but hide the echo from stdout
     gab_login_user = args.gab_login_user or input("Gab login user: ")
-    gab_login_pass = args.gab_login_pass or input("Gab login pass: ")
+    gab_login_pass = args.gab_login_pass or getpass("Gab login pass: ")
+    print("Let's make sure the username/password for Gab.com is valid ...")
+    try:
+        gab_post(gab_login_user, gab_login_pass, content="Can we login?", dry_run=True)
+        print("The username/password is valid.")
+    except Exception:  # pylint: disable=broad-except
+        msg = "Error: the username/password is not valid to sign on. Continue anyway? (y/n): "
+        if "y" not in input(msg).lower():
+            sys.exit(1)
     # TODO: validate user/pass on gab.  # pylint: disable=W0511
+    print("Let's start the loop ...")
     rss2gab_loop(rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=args.dry_run)
 
 

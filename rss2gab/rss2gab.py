@@ -56,17 +56,17 @@ def rss2gab(
     """
     Parse the RSS feed and post to Gab.
     """
-    print("Checking for new posts.")
+    print(f"Checking for new posts from {url_rss_feed}")
     rss_content_list = parse_rss_feed(url_rss_feed)
     gab_posts = gab_readposts(gab_id)
     new_rss_entries = _filter_rss_from_existing_posts(rss_content_list, gab_posts)
-    if limit is not None:
-        new_rss_entries = new_rss_entries[:limit]
     if not new_rss_entries:
         print("No new posts to post.")
         return
-    print(f"Found {len(new_rss_entries)} new posts to post.")
+    print(f"Found {len(new_rss_entries)} new posts to post on the {gab_id} feed.")
     new_rss_entries.reverse()
+    if limit is not None:
+        new_rss_entries = new_rss_entries[:limit]
     for rss_entry in new_rss_entries:
         print(f"Posting: {rss_entry.content}")
         gab_post(gab_login_user, gab_login_pass, rss_entry.content, dry_run=dry_run)
@@ -85,7 +85,9 @@ def rss2gab_loop(
     """
     while True:
         try:
-            rss2gab(url_rss_feed, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run)
+            # Just incase there are two instances of this running on different machines,
+            # limit the number of posts to one per minute.
+            rss2gab(url_rss_feed, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run, limit=1)
             print(f"Sleeping for {interval} seconds.")
         except KeyboardInterrupt:
             break
