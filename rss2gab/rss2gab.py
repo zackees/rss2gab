@@ -85,9 +85,7 @@ def rss2gab_loop(
     """
     while True:
         try:
-            # Just incase there are two instances of this running on different machines,
-            # limit the number of posts to one per minute.
-            rss2gab(url_rss_feed, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run, limit=1)
+            rss2gab(url_rss_feed, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run)
             print(f"Sleeping for {interval} seconds.")
         except KeyboardInterrupt:
             break
