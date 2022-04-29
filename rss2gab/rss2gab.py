@@ -69,7 +69,11 @@ def rss2gab(
         new_rss_entries = new_rss_entries[:limit]
     for rss_entry in new_rss_entries:
         print(f"Posting: {rss_entry.content}")
-        gab_post(gab_login_user, gab_login_pass, rss_entry.content, dry_run=dry_run)
+        try:
+            gab_post(gab_login_user, gab_login_pass, rss_entry.content, dry_run=dry_run)
+        except Exception as e:  # pylint: disable=broad-except
+            print(f"{__file__}: Error posting because of {e}")
+            continue
 
 
 def rss2gab_loop(
@@ -89,6 +93,4 @@ def rss2gab_loop(
             print(f"Sleeping for {interval} seconds.")
         except KeyboardInterrupt:
             break
-        except Exception as err:  # pylint: disable=broad-except
-            print(f"Error happened: {err}")
         time.sleep(interval)
