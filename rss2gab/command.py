@@ -27,15 +27,11 @@ def _parse_args() -> argparse.Namespace:
         type=str,
         help="The rss feed, for example: http://Bigleaguepolitics.com/feed",
     )
-    parser.add_argument(
-        "--gab_id", type=str, help="The gab id, for example gab.com/ID"
-    )
+    parser.add_argument("--gab_id", type=str, help="The gab id, for example gab.com/ID")
     parser.add_argument(
         "--gab_login_user", type=str, help="user name or email used to login"
     )
-    parser.add_argument(
-        "--gab_login_pass", type=str, help="password used to login"
-    )
+    parser.add_argument("--gab_login_pass", type=str, help="password used to login")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -49,9 +45,7 @@ def _parse_args() -> argparse.Namespace:
 def fetch(url: str, timeout: int = 5) -> requests.Response:
     """Fetch a url using the specified user agent."""
     headers = {"User-Agent": USER_AGENT}
-    resp = requests.get(
-        url, allow_redirects=True, headers=headers, timeout=timeout
-    )
+    resp = requests.get(url, allow_redirects=True, headers=headers, timeout=timeout)
     return resp
 
 
@@ -110,9 +104,7 @@ def run(
             sys.exit(1)
     # TODO: validate user/pass on gab.  # pylint: disable=W0511
     print("Let's start the loop ...")
-    rss2gab_loop(
-        rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run
-    )
+    rss2gab_loop(rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run)
 
 
 def main() -> None:
