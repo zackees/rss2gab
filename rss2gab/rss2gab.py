@@ -71,8 +71,8 @@ def rss2gab(
         print(f"Posting: {rss_entry.content}")
         try:
             gab_post(gab_login_user, gab_login_pass, rss_entry.content, dry_run=dry_run)
-        except Exception as e:  # pylint: disable=broad-except
-            print(f"{__file__}: Error posting because of {e}")
+        except Exception as err:  # pylint: disable=broad-except
+            print(f"{__file__}: Error posting because of {err}")
             continue
 
 
