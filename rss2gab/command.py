@@ -93,8 +93,8 @@ def run(
             sys.exit(1)
         sys.exit(1)
     # Get the password, but hide the echo from stdout
-    gab_login_user = gab_login_user or input("Gab login user: ")
-    gab_login_pass = gab_login_pass or getpass("Gab login pass: ")
+    gab_login_user = gab_login_user or input("Gab login username: ")
+    gab_login_pass = gab_login_pass or getpass(f"Gab pass for {gab_login_user}: ")
     print("Let's make sure the username/password for Gab.com is valid ...")
     try:
         gab_post(
