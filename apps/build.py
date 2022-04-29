@@ -16,7 +16,6 @@ if not os.path.exists("activate.sh"):
         print("Failed to install")
         sys.exit(rtn)
 
-# APP = "bigleague"
 APP = "bigleague"
 
 APP_BUILD_DIR = os.path.join(PROJECT_ROOT, "apps", "build", APP)
@@ -32,12 +31,14 @@ CMD = [
     "&&",
     "pip install nuitka zstandard",
     "&&",
+    "pip install .",
+    "&&",
     f"cd {APP_BUILD_DIR}",
     "&&",
     "python -m nuitka",
     "--follow-imports",
     "--standalone",
-    "--include-package-data=selenium",
+    "--include-package-data=selenium,rss2gab",
     APP_SRC,
     "--onefile",
     "-o",

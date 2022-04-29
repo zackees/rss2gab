@@ -3,7 +3,7 @@
 """
 
 
-from rss2gab.command import run
+from rss2gab import run
 
 RSS_FEED_URL = "http://Bigleaguepolitics.com/feed"
 GAB_ID = "bigleaguepol"
