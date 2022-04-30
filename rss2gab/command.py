@@ -17,35 +17,12 @@ from rss2gab.rss2gab import rss2gab_loop
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
 
 
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
-        description="Helper for rss2gab",
-    )
-    parser.add_argument(
-        "--rss_feed_url",
-        type=str,
-        help="The rss feed, for example: http://Bigleaguepolitics.com/feed",
-    )
-    parser.add_argument("--gab_id", type=str, help="The gab id, for example gab.com/ID")
-    parser.add_argument(
-        "--gab_login_user", type=str, help="user name or email used to login"
-    )
-    parser.add_argument("--gab_login_pass", type=str, help="password used to login")
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        default=False,
-        help="Optional, when true no posts are made.",
-    )
-    args = parser.parse_args()
-    return args
-
-
 def fetch(url: str, timeout: int = 5) -> requests.Response:
     """Fetch a url using the specified user agent."""
     headers = {"User-Agent": USER_AGENT}
-    resp = requests.get(url, allow_redirects=True, headers=headers, timeout=timeout)
+    resp = requests.get(
+        url, allow_redirects=True, headers=headers, timeout=timeout
+    )
     return resp
 
 
@@ -95,7 +72,9 @@ def run(
         sys.exit(1)
     # Get the password, but hide the echo from stdout
     gab_login_user = gab_login_user or input("\nGab login username: ")
-    gab_login_pass = gab_login_pass or getpass(f"Gab pass for {gab_login_user}: ")
+    gab_login_pass = gab_login_pass or getpass(
+        f"Gab pass for {gab_login_user}: "
+    )
     print("Let's make sure the username/password for Gab.com is valid ...")
     try:
         gab_post(
@@ -111,12 +90,38 @@ def run(
             sys.exit(1)
     # TODO: validate user/pass on gab.  # pylint: disable=W0511
     print("Let's start the loop ...")
-    rss2gab_loop(rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run)
+    rss2gab_loop(
+        rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run
+    )
 
 
 def main() -> None:
     """Command line interface for rss2gab"""
-    args = _parse_args()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="Helper for rss2gab",
+    )
+    parser.add_argument(
+        "--rss_feed_url",
+        type=str,
+        help="The rss feed, for example: http://Bigleaguepolitics.com/feed",
+    )
+    parser.add_argument(
+        "--gab_id", type=str, help="The gab id, for example gab.com/ID"
+    )
+    parser.add_argument(
+        "--gab_login_user", type=str, help="user name or email used to login"
+    )
+    parser.add_argument(
+        "--gab_login_pass", type=str, help="password used to login"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=False,
+        help="Optional, when true no posts are made.",
+    )
+    args = parser.parse_args()
     run(
         args.rss_feed_url,
         args.gab_id,
