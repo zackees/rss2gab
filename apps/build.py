@@ -2,6 +2,8 @@
     Builds the bigleague site.
 """
 
+# pylint: disable=R1716
+
 import os
 import sys
 import zipfile
@@ -81,4 +83,6 @@ os.chdir(APP_BUILD_DIR)
 with zipfile.ZipFile(f"{APP_NAME}.zip", "w", zipfile.ZIP_DEFLATED) as zipf:
     zipf.write(APP_NAME)
 
-print(f"\nDone building {os.path.abspath(APP_NAME)}\n")
+print(
+    f'\nDone building app "{APP_NAME}", binary located at:\n  {os.path.abspath(APP_NAME)}\n'
+)

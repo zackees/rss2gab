@@ -6,6 +6,7 @@ Command line handler for the rss2gab.
 
 import argparse
 import sys
+from datetime import datetime, timedelta
 from getpass import getpass
 from typing import Optional
 
@@ -26,14 +27,19 @@ def fetch(url: str, timeout: int = 5) -> requests.Response:
     return resp
 
 
-def run(
+def run(  # pylint: disable=too-many-arguments
     rss_feed_url: Optional[str] = None,
     gab_id: Optional[str] = None,
     gab_login_user: Optional[str] = None,
     gab_login_pass: Optional[str] = None,
+    max_hours_ago: Optional[int] = None,
     dry_run: bool = False,
 ) -> None:
     """Fill in any missing parametes and run the rss2gab loop."""
+    if max_hours_ago is None:
+        msg = "How many hours ago should we check for new posts? "
+        max_hours_ago = int(input(msg))
+    published_after = datetime.now() - timedelta(hours=max_hours_ago)
     print("\nChecking simulated browser installed...")
     gab_ok, exception = gab_test()
     if not gab_ok:
@@ -91,7 +97,12 @@ def run(
     # TODO: validate user/pass on gab.  # pylint: disable=W0511
     print("Let's start the loop ...")
     rss2gab_loop(
-        rss_feed_url, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run
+        rss_feed_url,
+        gab_id,
+        gab_login_user,
+        gab_login_pass,
+        dry_run=dry_run,
+        published_after=published_after,
     )
 
 

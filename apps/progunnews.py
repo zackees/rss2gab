@@ -2,6 +2,8 @@
     ProGunNews rss2gab app.
 """
 
+# pylint: disable=R0801
+
 import argparse
 
 from rss2gab import run

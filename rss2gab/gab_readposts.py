@@ -28,7 +28,7 @@ def gab_readposts(
     return out
 
 
-def main() -> None:
+def unit_test() -> None:
     """Test runner"""
     out = gab_readposts(
         gab_id="testgabposter",
@@ -40,4 +40,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    unit_test()

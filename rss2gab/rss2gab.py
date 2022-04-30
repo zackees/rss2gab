@@ -7,6 +7,7 @@
 import re
 import time
 import traceback
+from datetime import datetime
 from typing import List, Optional
 
 from gabposter import gab_post  # type: ignore
@@ -53,12 +54,13 @@ def rss2gab(
     gab_login_pass: str,
     dry_run: bool = False,
     limit: Optional[int] = None,
+    published_after: Optional[datetime] = None,
 ) -> None:
     """
     Parse the RSS feed and post to Gab.
     """
     print(f"Checking for new posts from {url_rss_feed}")
-    rss_content_list = parse_rss_feed(url_rss_feed)
+    rss_content_list = parse_rss_feed(url_rss_feed, published_after=published_after)
     gab_posts = gab_readposts(
         gab_id, gab_login_user=gab_login_user, gab_login_pass=gab_login_pass
     )
@@ -95,6 +97,7 @@ def rss2gab_loop(
     gab_login_pass: str,
     dry_run: bool = False,
     interval: int = 60,
+    published_after: Optional[datetime] = None,
 ) -> None:
     """
     Parse the RSS feed and post to Gab.
@@ -107,6 +110,7 @@ def rss2gab_loop(
                 gab_login_user,
                 gab_login_pass,
                 dry_run=dry_run,
+                published_after=published_after
             )
             print(f"Sleeping for {interval} seconds.")
         except KeyboardInterrupt:
