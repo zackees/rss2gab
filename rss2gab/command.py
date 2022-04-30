@@ -2,9 +2,10 @@
 Command line handler for the rss2gab.
 """
 
-# pylint: disable=line-too-long
+# pylint: disable=line-too-long,disable=too-many-statements
 
 import argparse
+import subprocess
 import sys
 from getpass import getpass
 from typing import Optional

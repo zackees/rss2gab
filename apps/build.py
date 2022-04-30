@@ -6,7 +6,7 @@ import os
 import sys
 import zipfile
 
-APP = "progunnews"
+APP = "generic"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(HERE)
@@ -47,7 +47,6 @@ CMD = [
     "-o",
     f"{APP_BUILD_DIR}/{APP_NAME}",
 ]
-
 CMD_STR = " ".join(CMD)
 
 print(f"Executing:\n  {CMD_STR}")
