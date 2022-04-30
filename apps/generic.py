@@ -4,4 +4,4 @@
 
 from rss2gab.command import run
 
-run()
+run(dry_run=True)

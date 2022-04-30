@@ -4,6 +4,7 @@
 
 # pylint: disable=too-many-arguments
 
+import multiprocessing
 import re
 import time
 from typing import List, Optional
@@ -13,9 +14,7 @@ from gabposter import gab_post  # type: ignore
 from rss2gab.gab_readposts import gab_readposts
 from rss2gab.parse_rss_feed import RssEntry, parse_rss_feed
 
-URL_PATTERN = (
-    r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
-)
+URL_PATTERN = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
 
 
 def _filter_rss_from_existing_posts(
@@ -61,18 +60,27 @@ def rss2gab(
     print(f"Checking for new posts from {url_rss_feed}")
     rss_content_list = parse_rss_feed(url_rss_feed)
     gab_posts = gab_readposts(gab_id)
-    new_rss_entries = _filter_rss_from_existing_posts(rss_content_list, gab_posts)
+    new_rss_entries = _filter_rss_from_existing_posts(
+        rss_content_list, gab_posts
+    )
     if not new_rss_entries:
         print("No new posts to post.")
         return
-    print(f"Found {len(new_rss_entries)} new posts to post on the {gab_id} feed.")
+    print(
+        f"Found {len(new_rss_entries)} new posts to post on the {gab_id} feed."
+    )
     new_rss_entries.reverse()
     if limit is not None:
         new_rss_entries = new_rss_entries[:limit]
     for rss_entry in new_rss_entries:
         print(f"Posting: {rss_entry.content}")
         try:
-            gab_post(gab_login_user, gab_login_pass, rss_entry.content, dry_run=dry_run)
+            gab_post(
+                gab_login_user,
+                gab_login_pass,
+                rss_entry.content,
+                dry_run=dry_run,
+            )
         except Exception as err:  # pylint: disable=broad-except
             print(f"{__file__}: Error posting because of {err}")
             continue
@@ -91,9 +99,20 @@ def rss2gab_loop(
     """
     while True:
         try:
-            rss2gab(
-                url_rss_feed, gab_id, gab_login_user, gab_login_pass, dry_run=dry_run
-            )
+
+            def task() -> None:
+                rss2gab(
+                    url_rss_feed,
+                    gab_id,
+                    gab_login_user,
+                    gab_login_pass,
+                    dry_run=dry_run,
+                )
+
+            # Run task in a separate process to prevent long term memory leaks.
+            proc = multiprocessing.Process(target=task)
+            proc.start()
+            proc.join()
             print(f"Sleeping for {interval} seconds.")
         except KeyboardInterrupt:
             break

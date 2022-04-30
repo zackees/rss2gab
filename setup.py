@@ -95,6 +95,7 @@ setup(
     entry_points={
         "console_scripts": [
             "rss2gab = rss2gab.command:main",
+            "rss2gab_selenium_install = rss2gab.command:selenium_install",
         ],
     },
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),

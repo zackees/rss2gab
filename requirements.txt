@@ -1,4 +1,4 @@
-gabposter
+gabposter==1.2.0
 feedparser
 garc
 requests

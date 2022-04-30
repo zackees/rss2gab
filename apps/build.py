@@ -4,9 +4,13 @@
 
 import os
 import sys
+import zipfile
+
+APP = "progunnews"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(HERE)
+
 
 os.chdir(PROJECT_ROOT)
 
@@ -16,10 +20,8 @@ if not os.path.exists("activate.sh"):
         print("Failed to install")
         sys.exit(rtn)
 
-APP = "bigleague"
-
-APP_BUILD_DIR = os.path.join(PROJECT_ROOT, "apps", "build", APP)
-APP_SRC = os.path.join(PROJECT_ROOT, "apps", f"{APP}.py")
+APP_BUILD_DIR = os.path.join("apps", "build", APP)
+APP_SRC = os.path.join("apps", f"{APP}.py")
 APP_NAME = f"{APP}"
 if sys.platform == "win32":
     APP_NAME += ".exe"
@@ -33,16 +35,17 @@ CMD = [
     "&&",
     "pip install .",
     "&&",
-    f"cd {APP_BUILD_DIR}",
+    "rss2gab_selenium_install",
     "&&",
     "python -m nuitka",
     "--follow-imports",
     "--standalone",
     "--include-package-data=selenium,rss2gab",
+    f"--output-dir={APP_BUILD_DIR}",
     APP_SRC,
     "--onefile",
     "-o",
-    APP_NAME,
+    f"{APP_BUILD_DIR}/{APP_NAME}",
 ]
 
 CMD_STR = " ".join(CMD)
@@ -53,3 +56,9 @@ rtn = os.system(CMD_STR)
 if rtn != 0:
     print("Failed to build")
     sys.exit(rtn)
+
+os.chdir(APP_BUILD_DIR)
+
+# make a zip file of the APP_NAME at the current directory
+with zipfile.ZipFile(f"{APP_NAME}.zip", "w", zipfile.ZIP_DEFLATED) as zipf:
+    zipf.write(APP_NAME)

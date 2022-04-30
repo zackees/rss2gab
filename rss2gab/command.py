@@ -10,7 +10,7 @@ from getpass import getpass
 from typing import Optional
 
 import requests  # type: ignore
-from gabposter import gab_post  # type: ignore
+from gabposter import gab_post, gab_test  # type: ignore
 
 from rss2gab.rss2gab import rss2gab_loop
 
@@ -55,6 +55,11 @@ def fetch(url: str, timeout: int = 5) -> requests.Response:
     return resp
 
 
+def selenium_install() -> None:
+    """Force the driver to be installed."""
+    gab_test()
+
+
 def run(
     rss_feed_url: Optional[str] = None,
     gab_id: Optional[str] = None,
@@ -63,7 +68,14 @@ def run(
     dry_run: bool = False,
 ) -> None:
     """Fill in any missing parametes and run the rss2gab loop."""
-    rss_feed_url = rss_feed_url or input("Rss feed url: ")
+    print("\nChecking simulated browser installed...")
+    gab_ok, exception = gab_test()
+    if not gab_ok:
+        msg = f"Failed the test to connect to gab.com using the simulated browser because {exception}. Continue anyway (y/n)?"
+        if input(msg).lower() != "y":
+            sys.exit(1)
+    print("Simulated browser test successful.")
+    rss_feed_url = rss_feed_url or input("\nRss feed url: ")
     print(f"Checking url: {rss_feed_url} ...")
     try:
         resp = fetch(rss_feed_url)
@@ -80,7 +92,7 @@ def run(
             ).lower()
         ):
             sys.exit(1)
-    gab_id = gab_id or input("Gab id: ")
+    gab_id = gab_id or input("\nGab id: ")
     gab_id_url = f"https://gab.com/{gab_id}"
     print(f"Checking gab id: {gab_id_url} ...")
     try:
@@ -93,8 +105,10 @@ def run(
             sys.exit(1)
         sys.exit(1)
     # Get the password, but hide the echo from stdout
-    gab_login_user = gab_login_user or input("Gab login username: ")
-    gab_login_pass = gab_login_pass or getpass(f"Gab pass for {gab_login_user}: ")
+    gab_login_user = gab_login_user or input("\nGab login username: ")
+    gab_login_pass = gab_login_pass or getpass(
+        f"Gab pass for {gab_login_user}: "
+    )
     print("Let's make sure the username/password for Gab.com is valid ...")
     try:
         gab_post(
