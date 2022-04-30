@@ -23,10 +23,14 @@ VERSION = None
 with open(os.path.join(HERE, "README.md"), encoding="utf-8", mode="rt") as fd:
     LONG_DESCRIPTION = fd.read()
 
-with open(os.path.join(HERE, "requirements.txt"), encoding="utf-8", mode="rt") as fd:
+with open(
+    os.path.join(HERE, "requirements.txt"), encoding="utf-8", mode="rt"
+) as fd:
     REQUIREMENTS = [line.strip() for line in fd.readlines() if line.strip()]
 
-with open(os.path.join(HERE, NAME, "version.py"), encoding="utf-8", mode="rt") as fd:
+with open(
+    os.path.join(HERE, NAME, "version.py"), encoding="utf-8", mode="rt"
+) as fd:
     for line in fd.readlines():
         if line.startswith("VERSION"):
             VERSION = line.split("=")[1].strip().strip('"')
@@ -59,7 +63,11 @@ class UploadCommand(Command):
             pass
 
         self.status("Building Source and Wheel (universal) distribution…")
-        os.system('"{0}" setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        os.system(
+            '"{0}" setup.py sdist bdist_wheel --universal'.format(
+                sys.executable
+            )
+        )
 
         self.status("Uploading the package to PyPI via Twine…")
         os.system("twine upload dist/*")
@@ -95,10 +103,11 @@ setup(
     entry_points={
         "console_scripts": [
             "rss2gab = rss2gab.command:main",
-            "rss2gab_selenium_install = rss2gab.command:selenium_install",
         ],
     },
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(
+        exclude=["tests", "*.tests", "*.tests.*", "tests.*"]
+    ),
     package_data={},
     include_package_data=True,
     extras_require={
