@@ -32,14 +32,14 @@ def run(  # pylint: disable=too-many-arguments
     gab_id: Optional[str] = None,
     gab_login_user: Optional[str] = None,
     gab_login_pass: Optional[str] = None,
-    max_hours_ago: Optional[int] = None,
+    published_hours_ago: Optional[int] = None,
     dry_run: bool = False,
 ) -> None:
     """Fill in any missing parametes and run the rss2gab loop."""
-    if max_hours_ago is None:
+    if published_hours_ago is None:
         msg = "How many hours ago should we check for new posts? "
-        max_hours_ago = int(input(msg))
-    published_after = datetime.now() - timedelta(hours=max_hours_ago)
+        published_hours_ago = int(input(msg))
+    published_after = datetime.now() - timedelta(hours=published_hours_ago)
     print("\nChecking simulated browser installed...")
     gab_ok, exception = gab_test()
     if not gab_ok:
@@ -132,13 +132,17 @@ def main() -> None:
         default=False,
         help="Optional, when true no posts are made.",
     )
+    parser.add_argument(
+        "--published_hours_ago", type=int, help="", default=None
+    )
     args = parser.parse_args()
     run(
-        args.rss_feed_url,
-        args.gab_id,
-        args.gab_login_user,
-        args.gab_login_pass,
-        args.dry_run,
+        rss_feed_url=args.rss_feed_url,
+        gab_id=args.gab_id,
+        gab_login_user=args.gab_login_user,
+        gab_login_pass=args.gab_login_pass,
+        dry_run=args.dry_run,
+        published_hours_ago=args.published_hours_ago,
     )
 
 

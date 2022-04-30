@@ -1,13 +1,21 @@
 """
     Tests the gab driver.
 """
+
 import re
+import ssl
 import time
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 
 import feedparser  # type: ignore
+
+# Fix the SSL error for rss sites that don't have a valid certificate.
+ssl._create_default_https_context = (  # pylint: disable=protected-access
+    ssl._create_unverified_context  # pylint: disable=protected-access
+)
+
 
 _IMG_URL_PATTERN = r"https?://[^\s]+\.(?:png|jpg|jpeg|gif)"
 _DEFAULT_LIMIT = 100
@@ -40,11 +48,7 @@ def _feed_entry_to_content(entry: feedparser.FeedParserDict) -> RssEntry:
     description = entry.description
     # Turn the entry.published into a datetime object
     published: time.struct_time = entry.published_parsed
-    # Convert time.struct_time to datetime object
     post_date = datetime.fromtimestamp(time.mktime(published))
-    # print(post_date)
-    # published = datetime.fromtimestamp(entry.published)
-    # print(published)
     imgs = _find_all_img_urls(description)
     img = imgs[0] if imgs else None
     content = title + "\n\n" + link
@@ -76,7 +80,10 @@ def parse_rss_feed(
 
 def unit_test() -> None:
     """Unit test to use for development."""
-    posts = parse_rss_feed("http://Bigleaguepolitics.com/feed")
+    days_ago = datetime.now() - timedelta(days=5)
+    posts = parse_rss_feed(
+        "https://progunnews.com/index.rss", published_after=days_ago
+    )
     for post in posts:
         print(post)
 
