@@ -45,6 +45,9 @@ def _filter_rss_from_existing_posts(
     return filtered_rss
 
 
+import traceback
+
+
 def rss2gab(
     url_rss_feed: str,
     gab_id: str,
@@ -109,5 +112,6 @@ def rss2gab_loop(
         except KeyboardInterrupt:
             break
         except Exception as err:  # pylint: disable=broad-except
-            print(f"\nError encountered: {err}\n")
+            print(f"\nError encountered: {err}\n\nStackTrace:\n")
+            traceback.print_exc()
         time.sleep(interval)
