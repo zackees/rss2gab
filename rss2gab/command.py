@@ -34,6 +34,7 @@ def run(  # pylint: disable=too-many-arguments
     gab_login_pass: Optional[str] = None,
     published_hours_ago: Optional[int] = None,
     dry_run: bool = False,
+    headless: bool = False,
 ) -> None:
     """Fill in any missing parametes and run the rss2gab loop."""
     if published_hours_ago is None:
@@ -41,7 +42,7 @@ def run(  # pylint: disable=too-many-arguments
         published_hours_ago = int(input(msg))
     published_after = datetime.now() - timedelta(hours=published_hours_ago)
     print("\nChecking simulated browser installed...")
-    gab_ok, exception = gab_test()
+    gab_ok, exception = gab_test(headless=headless)
     if not gab_ok:
         msg = f"Failed the test to connect to gab.com using the simulated browser because {exception}. Continue anyway (y/n)?"
         if input(msg).lower() != "y":
@@ -88,6 +89,7 @@ def run(  # pylint: disable=too-many-arguments
             gab_login_pass,
             content="Can we login?",
             dry_run=True,
+            headless=headless,
         )
         print("The username/password is valid.")
     except Exception:  # pylint: disable=broad-except
@@ -103,6 +105,7 @@ def run(  # pylint: disable=too-many-arguments
         gab_login_pass,
         dry_run=dry_run,
         published_after=published_after,
+        headless=headless,
     )
 
 

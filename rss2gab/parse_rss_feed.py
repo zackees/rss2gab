@@ -81,9 +81,7 @@ def parse_rss_feed(
 def unit_test() -> None:
     """Unit test to use for development."""
     days_ago = datetime.now() - timedelta(days=5)
-    posts = parse_rss_feed(
-        "https://progunnews.com/index.rss", published_after=days_ago
-    )
+    posts = parse_rss_feed("https://progunnews.com/index.rss", published_after=days_ago)
     for post in posts:
         print(post)
 
