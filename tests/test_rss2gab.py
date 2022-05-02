@@ -15,7 +15,6 @@ GAB_ID = "testgabposter"  # Outward facing username, like gab.com/username
 class RssTester(unittest.TestCase):
     """Gab driver test framework."""
 
-    @unittest.skip("Not implemented yet")
     def test_gab_test(self) -> None:
         """Sanity test to make sure that the browser can connect to the web."""
         self.assertTrue(gab_test())

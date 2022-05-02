@@ -12,7 +12,7 @@ from rss2gab import run
 RSS_FEED_URL = "http://Bigleaguepolitics.com/feed"
 GAB_ID = "bigleaguepol"
 GAB_LOGIN_USER = "Admin@bigleaguepolitics.com"
-DRY_RUN = True  # Turn off when app is ready
+DRY_RUN = False  # Turn off when app is ready
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--password", help="Password for gab.com account")
