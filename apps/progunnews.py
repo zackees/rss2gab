@@ -5,6 +5,7 @@
 # pylint: disable=R0801
 
 import argparse
+import time
 
 from rss2gab import run
 
@@ -21,6 +22,12 @@ argparser.add_argument(
     default=24,
 )
 args = argparser.parse_args()
+print("\nRss2Gab Progunnews app. Copyright 2022 Zach Vorhies.\n")
+if args.password is None:
+    print(
+        '\nNote: avoid entering a password by adding "--password <MYPASSWORD>" when running this command.\n'
+    )
+    time.sleep(3)
 
 run(
     rss_feed_url=RSS_FEED_URL,
