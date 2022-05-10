@@ -26,13 +26,15 @@ args = argparser.parse_args()
 print("\nRss2Gab BigLeague app. Copyright 2022 Zach Vorhies.\n")
 if args.password is None:
     print(
-        '\nNote: avoid entering a password by adding "--password <MYPASSWORD>" when running this command.\n'
+        "\nNote: avoid entering a password by adding "
+        '"--password <MYPASSWORD>" when running this command.\n'
     )
     time.sleep(3)
 
 if DRY_RUN:
     print(
-        "\nThis app is a demo. It will not actually post anything to gab.com. Also the full app will run silently rather than pop up a web window.\n"
+        "\nThis app is a demo. It will not actually post anything to gab.com."
+        " Also the full app will run silently rather than pop up a web window.\n"
     )
     time.sleep(3)
 

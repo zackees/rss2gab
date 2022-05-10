@@ -1,11 +1,17 @@
 """
     Gab reader of account
 """
+import ssl
 from typing import List
 
 from garc.client import Garc  # type: ignore
 
 DEFAULT_POST_LIMIT = 100
+
+# Disable SSL certificate verification
+ssl._create_default_https_context = (  # pylint: disable=protected-access
+    ssl._create_unverified_context  # pylint: disable=protected-access
+)
 
 
 def gab_readposts(

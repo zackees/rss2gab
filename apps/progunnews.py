@@ -25,7 +25,8 @@ args = argparser.parse_args()
 print("\nRss2Gab Progunnews app. Copyright 2022 Zach Vorhies.\n")
 if args.password is None:
     print(
-        '\nNote: avoid entering a password by adding "--password <MYPASSWORD>" when running this command.\n'
+        '\nNote: avoid entering a password by adding '
+        '"--password <MYPASSWORD>" when running this command.\n'
     )
     time.sleep(3)
 
