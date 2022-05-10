@@ -8,15 +8,15 @@ import os
 import sys
 import zipfile
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(HERE)
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_DIR = os.path.join(PROJECT_ROOT, "apps")
 
 # Find all apps and ask the user which ones they want to build.
-os.chdir(HERE)
+os.chdir(APP_DIR)
 
 apps = [
     file.split(".")[0]
-    for file in os.listdir(HERE)
+    for file in os.listdir(APP_DIR)
     if file.endswith(".py") and file != "build.py"
 ]
 apps.sort()

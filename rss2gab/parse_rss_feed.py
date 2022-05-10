@@ -67,7 +67,9 @@ def parse_rss_feed(
     feed = feedparser.parse(feed_url)
     out: List[RssEntry] = []
     for entry in feed.entries:
+        print(f"  Parsing entry: {entry.title}")
         if len(out) >= limit:
+            print(f"  Reached limit of {limit} posts")
             break
         rss_entry = _feed_entry_to_content(entry)
         if published_after is None:
@@ -75,13 +77,17 @@ def parse_rss_feed(
             continue
         if rss_entry.published > published_after:
             out.append(rss_entry)
+            continue
+        print(f"  Skipping {entry.title} because it was too old.")
     return out
 
 
 def unit_test() -> None:
     """Unit test to use for development."""
     days_ago = datetime.now() - timedelta(days=5)
-    posts = parse_rss_feed("https://progunnews.com/index.rss", published_after=days_ago)
+    posts = parse_rss_feed(
+        "https://progunnews.com/index.rss", published_after=days_ago
+    )
     for post in posts:
         print(post)
 

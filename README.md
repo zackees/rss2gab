@@ -17,4 +17,4 @@ Just simply run `tox` at the command line and everything should be tested. You m
 
 # Building an app
 
-Go to the `apps` directory and use `python build.py` to build the programs.
+`pythony build_app.py` and follow the prompts

@@ -6,4 +6,6 @@
 
 from rss2gab.command import run
 
-run()
+headless = "y" in input("Headless? (y/n)?: ").lower()
+
+run(headless=headless)

@@ -2,7 +2,7 @@
     ProGunNews rss2gab app.
 """
 
-# pylint: disable=R0801
+# pylint: disable=R0801,line-too-long
 
 import argparse
 import time
