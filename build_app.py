@@ -52,8 +52,6 @@ os.makedirs(APP_BUILD_DIR, exist_ok=True)
 
 
 CMD = [
-    ". activate.sh",
-    "&&",
     "pip install nuitka zstandard",
     "&&",
     "pip install .",
