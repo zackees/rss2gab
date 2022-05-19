@@ -6,7 +6,18 @@ the system will work correctly.
 
 # Tests
 
-Just simply run `tox` at the command line and everything should be tested. You may need to install `tox` with `python -m pip tox`.
+To run all linting and unit test, please install `tox` and run it, like so:
+
+Install:
+```
+> python -m pip install tox
+```
+
+Then run `tox`:
+```
+> tox
+```
+
 
 ## Platform Unit Tests
 
