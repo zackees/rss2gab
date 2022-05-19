@@ -76,7 +76,7 @@ def rss2gab(
         print("No new posts to post.")
         return
     print(
-        f"Found {len(new_rss_entries)} new posts to post on the {gab_id} feed."
+        f" Found {len(new_rss_entries)} new posts to post on the {gab_id} feed."
     )
     new_rss_entries.reverse()
     if limit is not None:
