@@ -1,5 +1,5 @@
 gabposter==1.2.5
-feedparser
-garc
+feedparser==6.0.9
+garc==2.1
 requests
 moment
