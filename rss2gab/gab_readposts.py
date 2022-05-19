@@ -23,7 +23,13 @@ def gab_readposts(
     """Api to read the gab posts of the given user"""
     gab = Garc(user_account=gab_login_user, user_password=gab_login_pass)
     gab.login()
-    posts = gab.userposts(gab_id, gabs=limit)
+    try:
+        posts = gab.userposts(gab_id, gabs=limit)
+    except AttributeError as err:
+        if "'NoneType' object has no attribute 'json'" in str(err):
+            raise ConnectionError(  # pylint: disable=raise-missing-from
+                f"{__file__}:  Error: gab seems to be (temporarily) down right now. Error: {err}"
+            )
     out = []
     for post in posts:
         body = post["body"]
