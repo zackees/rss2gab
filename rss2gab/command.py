@@ -44,7 +44,7 @@ def run(  # pylint: disable=too-many-arguments
     print("\nChecking simulated browser installed...")
     gab_ok, exception = gab_test(headless=headless)
     if not gab_ok:
-        msg = f"Failed the test to connect to gab.com using the simulated browser because {exception}. Continue anyway (y/n)?"
+        msg = f"Failed the test to connect to gab.com using the simulated browser because {exception}.\nContinue anyway (y/n)?"
         if input(msg).lower() != "y":
             sys.exit(1)
     print("Simulated browser test successful.")
