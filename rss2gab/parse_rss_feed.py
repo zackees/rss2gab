@@ -25,6 +25,7 @@ _DEFAULT_LIMIT = 100
 class RssEntry:
     """Simple object of parsed RSS entries."""
 
+    title: str
     content: str
     published: datetime
     img: Optional[str] = None
@@ -52,7 +53,7 @@ def _feed_entry_to_content(entry: feedparser.FeedParserDict) -> RssEntry:
     imgs = _find_all_img_urls(description)
     img = imgs[0] if imgs else None
     content = title + "\n\n" + link
-    return RssEntry(content=content, published=post_date, img=img)
+    return RssEntry(title=title, content=content, published=post_date, img=img)
 
 
 def parse_rss_feed(
