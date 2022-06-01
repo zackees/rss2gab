@@ -26,7 +26,8 @@ class RssEntry:
     """Simple object of parsed RSS entries."""
 
     title: str
-    content: str
+    link: str
+    author: str
     published: datetime
     img: Optional[str] = None
 
@@ -47,13 +48,19 @@ def _feed_entry_to_content(entry: feedparser.FeedParserDict) -> RssEntry:
     title = entry.title
     link = entry.link
     description = entry.description
+    author = getattr(entry, "author", "")
     # Turn the entry.published into a datetime object
     published: time.struct_time = entry.published_parsed
     post_date = datetime.fromtimestamp(time.mktime(published))
     imgs = _find_all_img_urls(description)
     img = imgs[0] if imgs else None
-    content = title + "\n\n" + link
-    return RssEntry(title=title, content=content, published=post_date, img=img)
+    return RssEntry(
+        title=title,
+        link=link,
+        author=author,
+        published=post_date,
+        img=img,
+    )
 
 
 def parse_rss_feed(

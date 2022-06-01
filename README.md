@@ -29,3 +29,7 @@ Then run `tox`:
 # Building an app
 
 `pythony build_app.py` and follow the prompts
+
+# Versions
+
+  * 1.0.3: Adds include_author_in_content

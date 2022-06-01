@@ -4,7 +4,6 @@
 
 # pylint: disable=too-many-arguments,R0801
 
-import re
 import time
 import traceback
 from datetime import datetime
@@ -26,14 +25,7 @@ def _filter_rss_from_existing_posts(
     """
     filtered_rss = []
     for rss_entry in rss_feed:
-        content = rss_entry.content
-        # Use a regular expression to find the url in the content.
-        # This is a bit hacky, but it works.
-        url_match = re.search(URL_PATTERN, content)
-        if not url_match:
-            # No url found in the content so assume this is a user post and skip.
-            continue
-        url = url_match.group(0)
+        url = rss_entry.link
         found = False
         for post in gab_posts:
             if url in post:
@@ -43,8 +35,14 @@ def _filter_rss_from_existing_posts(
         if found:
             # Skip, we've already posted this
             continue
-        if rss_entry.content not in gab_posts:
-            print(f" Did not find {rss_entry.content} in gab posts")
+
+        for post in gab_posts:
+            if rss_entry.link in post:
+                print(f" Found {rss_entry.link} in gab post")
+                found = True
+                break
+        if not found:
+            print(f" Did not find {rss_entry.link} in gab posts")
             filtered_rss.append(rss_entry)
     return filtered_rss
 
@@ -57,6 +55,7 @@ def rss2gab(
     dry_run: bool = False,
     limit: Optional[int] = None,
     published_after: Optional[datetime] = None,
+    include_author_in_content: bool = False,
     headless: bool = False,
 ) -> None:
     """
@@ -84,12 +83,15 @@ def rss2gab(
     if len(new_rss_entries) > 0:
         print("Posting new posts...")
     for rss_entry in new_rss_entries:
-        print(f" Posting: {rss_entry.content}")
+        content = f"{rss_entry.title}\n\n{rss_entry.link}"
+        if include_author_in_content and rss_entry.author:
+            content = f"{rss_entry.author}: {content}"
+        print(f" Posting: {content}")
         try:
             gab_post(
                 gab_login_user,
                 gab_login_pass,
-                rss_entry.content,
+                content,
                 dry_run=dry_run,
                 headless=headless,
             )
